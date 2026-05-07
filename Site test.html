@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon Site Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0b09;
+      --surface: #161410;
+      --border: rgba(255,255,255,0.08);
+      --accent: #d4a853;
+      --accent-dim: rgba(212,168,83,0.12);
+      --text: #f0ebe0;
+      --muted: #8a8278;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(12,11,9,0.7);
+    }
+    .nav-logo { font-family: var(--serif); font-size: 1.3rem; letter-spacing: 0.02em; color: var(--accent); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent); color: #1a1200; padding: 0.5rem 1.25rem; border-radius: 2rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: opacity 0.2s; }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* HERO */
+    header {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 3rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 60% 60% at 70% 40%, rgba(212,168,83,0.07), transparent),
+                  radial-gradient(ellipse 40% 50% at 20% 80%, rgba(212,168,83,0.04), transparent);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0; opacity: 0.03;
+      background-image: linear-gradient(var(--text) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--text) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent-dim); border: 1px solid rgba(212,168,83,0.25);
+      padding: 0.35rem 1rem; border-radius: 2rem; margin-bottom: 2rem;
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+    }
+    .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 1.08; letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1.125rem; color: var(--muted); max-width: 500px; margin-bottom: 2.5rem; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #1a1200;
+      padding: 0.875rem 2rem; border-radius: 2rem;
+      text-decoration: none; font-weight: 500; font-size: 0.95rem;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn-secondary {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 0.875rem 2rem; border-radius: 2rem;
+      text-decoration: none; font-size: 0.95rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: var(--muted); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; z-index: 1;
+    }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(var(--muted), transparent); animation: scrollpulse 2s infinite; }
+    @keyframes scrollpulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    /* SECTION BASE */
+    section { padding: 6rem 3rem; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+    }
+    h2 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; margin-bottom: 1.25rem; }
+    .subtitle { color: var(--muted); font-size: 1.05rem; max-width: 520px; }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 4rem;
+    }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 1.25rem; padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(212,168,83,0.25); transform: translateY(-4px); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 0.75rem;
+      background: var(--accent-dim); border: 1px solid rgba(212,168,83,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; margin-bottom: 1.25rem;
+    }
+    .feature-card h3 { font-family: var(--serif); font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+
+    /* STATS */
+    .stats { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0; }
+    .stat-item { padding: 3rem 2rem; border-right: 1px solid var(--border); text-align: center; }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: var(--serif); font-size: 3rem; color: var(--accent); line-height: 1; }
+    .stat-label { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.05em; margin-top: 0.5rem; }
+
+    /* TESTIMONIALS */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 4rem; }
+    .testimonial-card { background: var(--surface); border: 1px solid var(--border); border-radius: 1.25rem; padding: 2rem; }
+    .stars { color: var(--accent); letter-spacing: 0.1em; font-size: 0.875rem; margin-bottom: 1rem; }
+    .testimonial-card blockquote { font-family: var(--serif); font-size: 1.05rem; line-height: 1.55; margin-bottom: 1.5rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-dim); border: 1px solid rgba(212,168,83,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 500; color: var(--accent); }
+    .author-info strong { display: block; font-size: 0.875rem; font-weight: 500; }
+    .author-info span { font-size: 0.8rem; color: var(--muted); }
+
+    /* CTA */
+    .cta-section {
+      text-align: center; background: var(--accent-dim);
+      border-top: 1px solid rgba(212,168,83,0.15); border-bottom: 1px solid rgba(212,168,83,0.15);
+    }
+    .cta-section h2 { margin: 0 auto 1rem; }
+    .cta-section p { color: var(--muted); margin-bottom: 2.5rem; }
+
+    /* FOOTER */
+    footer {
+      padding: 3rem; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: var(--serif); color: var(--accent); font-size: 1.1rem; }
+    footer p { color: var(--muted); font-size: 0.8rem; }
+
+    /* ANIMATIONS */
+    @keyframes fadeup { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-content > * { animation: fadeup 0.8s both; }
+    .hero-tag { animation-delay: 0.1s; }
+    h1 { animation-delay: 0.25s; }
+    .hero-desc { animation-delay: 0.4s; }
+    .hero-actions { animation-delay: 0.55s; }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      header, section { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Atelier&trade;</div>
+    <ul class="nav-links">
+      <li><a href="#features">Services</a></li>
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#testimonials">Avis</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Nous contacter</a>
+  </nav>
+
+  <header>
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Site de démonstration ✦</div>
+      <h1>Créer des<br/><em>expériences</em><br/>mémorables.</h1>
+      <p class="hero-desc">Un site de test élégant pour valider votre déploiement Cloudflare Pages. Rapide, léger, 100&nbsp;% statique.</p>
+      <div class="hero-actions">
+        <a href="#features" class="btn-primary">Découvrir →</a>
+        <a href="#contact" class="btn-secondary">Prendre contact</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Défiler
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">Uptime garanti</div></div>
+      <div class="stat-item"><div class="stat-num">2ms</div><div class="stat-label">Temps de réponse</div></div>
+      <div class="stat-item"><div class="stat-num">140+</div><div class="stat-label">Pays couverts</div></div>
+      <div class="stat-item"><div class="stat-num">0€</div><div class="stat-label">Coût d'hébergement</div></div>
+    </div>
+  </div>
+
+  <section id="features">
+    <p class="section-label">Ce que vous obtenez</p>
+    <h2>Tout ce qu'il faut<br/>pour démarrer</h2>
+    <p class="subtitle">Ce site illustre ce qu'on peut faire avec un simple fichier HTML déployé sur Cloudflare Pages.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Ultra rapide</h3>
+        <p>Servi depuis le CDN mondial de Cloudflare, votre site se charge en quelques millisecondes partout dans le monde.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>HTTPS automatique</h3>
+        <p>Certificat SSL gratuit, activé automatiquement sur votre domaine dès la mise en ligne.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>100% personnalisable</h3>
+        <p>Un seul fichier <code>index.html</code>. Modifiez les couleurs, textes et sections selon vos besoins.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h3>Déploiement simple</h3>
+        <p>Poussez vos fichiers sur GitHub, connectez Cloudflare Pages, et c'est en ligne automatiquement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Responsive</h3>
+        <p>S'adapte parfaitement à tous les écrans : mobile, tablette et desktop.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>Zéro dépendance</h3>
+        <p>Aucun framework, aucun bundle. Juste du HTML et CSS pur — rapide à charger et facile à maintenir.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials">
+    <p class="section-label">Témoignages</p>
+    <h2>Ils ont testé<br/>la solution</h2>
+    <p class="subtitle">Des retours d'utilisateurs qui ont déployé leur premier site sur Cloudflare Pages.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>« En moins de 10 minutes, mon site était en ligne avec mon propre domaine. Je n'avais jamais déployé de site de ma vie. »</blockquote>
+        <div class="testimonial-author">
+          <div class="avatar">ML</div>
+          <div class="author-info">
+            <strong>Marie L.</strong>
+            <span>Freelance designer</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>« La combinaison Cloudflare domaine + Pages est imbattable. Tout est géré au même endroit, sans frais cachés. »</blockquote>
+        <div class="testimonial-author">
+          <div class="avatar">TK</div>
+          <div class="author-info">
+            <strong>Thomas K.</strong>
+            <span>Développeur indie</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>« Mon portfolio charge en moins de 500ms depuis n'importe quel pays. Le CDN Cloudflare est vraiment impressionnant. »</blockquote>
+        <div class="testimonial-author">
+          <div class="avatar">SA</div>
+          <div class="author-info">
+            <strong>Sophie A.</strong>
+            <span>Photographe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="cta-section">
+    <p class="section-label">Prêt à déployer ?</p>
+    <h2>Votre site est<br/>entre vos mains.</h2>
+    <p>Téléchargez ce fichier, uploadez-le sur Cloudflare Pages<br/>et votre site sera en ligne en quelques minutes.</p>
+    <a href="#" class="btn-primary" style="display:inline-block;">Télécharger index.html</a>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Atelier&trade;</div>
+    <p>Site de démonstration — généré avec Claude · Déployé sur Cloudflare Pages</p>
+    <p style="color:var(--muted); font-size:0.8rem;">© 2025</p>
+  </footer>
+
+</body>
+</html>
