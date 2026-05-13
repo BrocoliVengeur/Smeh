@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ma Vidéothèque - Test</title>
+<style>
+:root {
+  --bg: #0c0c10;
+  --surface: #16161f;
+  --card: #1e1e2a;
+  --accent: #7c5cfc;
+  --accent2: #c084fc;
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --border: #2a2a3a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── NAV ── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 2rem;
+  background:var(--bg)cc;
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+}
+.nav-left{display:flex;align-items:center;gap:1rem}
+.nav-left a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .2s}
+.nav-left a:hover{color:var(--accent2)}
+.nav-title{font-weight:700;font-size:1rem;color:var(--text)}
+.btn-nav{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  padding:.4rem .9rem;border-radius:8px;cursor:pointer;font-size:.82rem;
+  transition:all .2s;display:flex;align-items:center;gap:.4rem;
+}
+.btn-nav:hover{border-color:var(--accent);color:var(--accent2)}
+
+/* ── HERO ── */
+.hero{padding:3rem 2rem 1.5rem;text-align:center;}
+.hero h1{
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2),#f0abfc);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:.6rem;
+}
+.hero p{color:var(--muted);font-size:.95rem}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:.6rem;padding:0 2rem 1.5rem;justify-content:center;flex-wrap:wrap;}
+.filter-btn{
+  background:var(--card);border:1px solid var(--border);
+  color:var(--muted);padding:.35rem .9rem;border-radius:20px;
+  font-size:.82rem;cursor:pointer;transition:all .2s;
+}
+.filter-btn.active{background:var(--accent)22;border-color:var(--accent);color:var(--accent2);}
+
+/* ── GRID ── */
+.grid-section{padding:0 2rem 4rem}
+.section-label{
+  font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin-bottom:1rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem;}
+.card{
+  background:var(--card);border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  position:relative;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 48px #0009;border-color:var(--accent)66;}
+
+.thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#222;}
+.thumb-img{width:100%;height:100%;object-fit:cover;}
+.play-overlay{
+  position:absolute;inset:0;background:#0006;
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;
+}
+.card:hover .play-overlay{opacity:1}
+.play-circle{
+  width:45px;height:45px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;color:white;font-size:1.2rem;
+}
+.cat-badge{position:absolute;top:.5rem;left:.5rem;font-size:.7rem;padding:.2rem .5rem;border-radius:5px;font-weight:700;}
+.card-info{padding:.8rem 1rem}
+.card-title{font-size:.9rem;font-weight:600;margin-bottom:.2rem;}
+.card-meta{font-size:.75rem;color:var(--muted)}
+
+/* ── MODAL ── */
+.modal{position:fixed;inset:0;z-index:1000;background:#000;display:none;flex-direction:column;}
+.modal.open{display:flex}
+.modal-bar{
+  display:flex;align-items:center;gap:.8rem;padding:.7rem 1.2rem;
+  background:#0009;backdrop-filter:blur(10px);border-bottom:1px solid #ffffff10;
+}
+.modal-title{flex:1;font-weight:700;}
+.icon-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;}
+.icon-btn:hover{color:white}
+
+.modal-main{flex:1;display:flex;overflow:hidden;}
+.slider-viewport{flex:1;position:relative;overflow:hidden;display:flex;}
+.slides-track{display:flex;height:100%;width:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+.slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;}
+
+.modal-controls{background:#000;padding:1rem 2rem;border-top:1px solid #ffffff10;text-align:center;}
+.ctrl-center{display:flex;justify-content:center;gap:2rem;}
+
+/* Categories */
+.cat-rap{background:#7c5cfc33;color:#c084fc}
+.cat-autre{background:#6b728033;color:#9ca3af}
+
+input[type=file]{display:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="#">🏠 Accueil</a>
+    <span style="color:var(--border)">›</span>
+    <span class="nav-title">🎬 Vidéos</span>
+  </div>
+  <div class="nav-actions">
+    <label for="fileInput" class="btn-nav">Ajouter local</label>
+    <input type="file" id="fileInput" accept="video/*" multiple/>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>🎬 Ma Vidéothèque</h1>
+  <p>Accédez à vos contenus préférés en un clic</p>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-cat="tout">Tout</button>
+  <button class="filter-btn" data-cat="rap">Clips Rap</button>
+  <button class="filter-btn" data-cat="autre">Autres</button>
+</div>
+
+<div class="grid-section">
+  <div class="section-label" id="sectionLabel">Chargement...</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-bar">
+    <button class="icon-btn" id="closeBtn">✕ Fermer</button>
+    <div class="modal-title" id="modalTitle">Titre</div>
+  </div>
+  <div class="modal-main">
+    <div class="slider-viewport">
+      <div class="slides-track" id="slidesTrack"></div>
+    </div>
+  </div>
+  <div class="modal-controls">
+    <div class="ctrl-center">
+        <button class="icon-btn" id="mPrev">⏮ Précédent</button>
+        <button class="icon-btn" id="mNext">Suivant ⏭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let videos = [{
+    name: "TEST",
+    ext: "YouTube",
+    // Paramètres essentiels pour Cloudflare/Origin check
+    url: "https://www.youtube.com/embed/Nf9OHbVHWio?enablejsapi=1&rel=0&autoplay=1&origin=" + window.location.origin,
+    cat: "rap",
+    thumb: "https://img.youtube.com/vi/Nf9OHbVHWio/maxresdefault.jpg",
+    type: "youtube"
+}];
+
+let filtered = [];
+let activeCat = 'tout';
+let curIdx = 0;
+
+/* ═══════════════════════════════════════
+   MOTEUR DE RECHERCHE & FILTRES
+═══════════════════════════════════════ */
+function applyFilter() {
+    filtered = activeCat === 'tout' ? [...videos] : videos.filter(v => v.cat === activeCat);
+    renderGrid();
+}
+
+function renderGrid() {
+    const grid = document.getElementById('grid');
+    document.getElementById('sectionLabel').textContent = `${filtered.length} vidéo${filtered.length > 1 ? 's' : ''}`;
+    grid.innerHTML = '';
+    
+    filtered.forEach((v, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <div class="thumb">
+                <img class="thumb-img" src="${v.thumb}" alt="">
+                <div class="play-overlay"><div class="play-circle">▶</div></div>
+                <span class="cat-badge ${v.cat === 'rap' ? 'cat-rap' : 'cat-autre'}">${v.cat.toUpperCase()}</span>
+            </div>
+            <div class="card-info">
+                <div class="card-title">${v.name}</div>
+                <div class="card-meta">${v.ext}</div>
+            </div>`;
+        card.onclick = () => openModal(i);
+        grid.appendChild(card);
+    });
+}
+
+/* ═══════════════════════════════════════
+   LECTEUR MODAL
+═══════════════════════════════════════ */
+function openModal(idx) {
+    curIdx = idx;
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    buildSlides();
+    goTo(idx);
+}
+
+function buildSlides() {
+    const track = document.getElementById('slidesTrack');
+    track.innerHTML = '';
+    filtered.forEach((v, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        if (v.type === 'youtube') {
+            slide.innerHTML = `<div id="yt-container-${i}" style="width:100%;height:100%"></div>`;
+        } else {
+            const vid = document.createElement('video');
+            vid.src = v.url;
+            vid.controls = true;
+            vid.style.maxWidth = "100%";
+            vid.style.maxHeight = "100%";
+            slide.appendChild(vid);
+        }
+        track.appendChild(slide);
+    });
+}
+
+function goTo(idx) {
+    pauseAll();
+    curIdx = idx;
+    document.getElementById('slidesTrack').style.transform = `translateX(-${idx * 100}%)`;
+    
+    const v = filtered[idx];
+    document.getElementById('modalTitle').textContent = v.name;
+
+    if (v.type === 'youtube') {
+        const container = document.getElementById(`yt-container-${idx}`);
+        if (container) {
+            // On injecte l'Iframe uniquement quand on arrive sur la slide
+            container.innerHTML = `<iframe width="100%" height="100%" src="${v.url}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        }
+    } else {
+        const videoTag = document.querySelectorAll('.slide video')[idx];
+        if (videoTag) videoTag.play();
+    }
+}
+
+function pauseAll() {
+    // Stop local
+    document.querySelectorAll('video').forEach(v => v.pause());
+    // Stop YouTube (en vidant les containers)
+    document.querySelectorAll('[id^="yt-container-"]').forEach(c => c.innerHTML = '');
+}
+
+function closeModal() {
+    pauseAll();
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════
+   EVENTS
+═══════════════════════════════════════ */
+document.getElementById('closeBtn').onclick = closeModal;
+document.getElementById('mNext').onclick = () => { if (curIdx < filtered.length - 1) goTo(curIdx + 1); };
+document.getElementById('mPrev').onclick = () => { if (curIdx > 0) goTo(curIdx - 1); };
+
+document.getElementById('fileInput').onchange = (e) => {
+    [...e.target.files].forEach(f => {
+        const url = URL.createObjectURL(f);
+        videos.push({
+            name: f.name.split('.')[0],
+            ext: f.name.split('.').pop().toUpperCase(),
+            url: url,
+            cat: "autre",
+            thumb: "", // On pourrait générer une miniature ici
+            type: "local"
+        });
+    });
+    applyFilter();
+};
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelector('.filter-btn.active').classList.remove('active');
+        btn.classList.add('active');
+        activeCat = btn.dataset.cat;
+        applyFilter();
+    };
+});
+
+// Init
+applyFilter();
+</script>
+</body>
+</html>
