@@ -4,126 +4,358 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smeh Ibiza 2026</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#09090f;--text:#f0ede8;--muted:rgba(240,237,232,.35);--border:rgba(255,255,255,.07);--accent:#c9a96e}
 html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Georgia',serif;overflow-x:hidden}
 
-body{
-  /* Marge pour la barre de navigation en bas */
-  padding-bottom: 80px;
-}
-
 body::before{
   content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity:0.6;
+  opacity:.6;
+}
+.horizon{position:fixed;bottom:0;left:0;right:0;height:40vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,169,110,.1) 0%, transparent 70%)}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d) ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.05}to{opacity:.7}}
+
+/* FLOATING PHRASES */
+.floaters{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.floater{
+  position:absolute;bottom:-80px;
+  font-family:-apple-system,sans-serif;
+  font-weight:700;letter-spacing:.5px;
+  color:rgba(201,169,110,.55);
+  white-space:nowrap;
+  animation:floatUp var(--dur) linear infinite var(--delay);
+  left:var(--x);opacity:0;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) rotate(var(--rot));opacity:0}
+  8%{opacity:1}
+  92%{opacity:.7}
+  100%{transform:translateY(-110vh) rotate(calc(var(--rot) + var(--rotEnd)));opacity:0}
 }
 
-/* ── STYLE DE LA NAV BAR UNIFIÉE ── */
-#smeh-nav { 
-    position:fixed; bottom:0; left:0; right:0; height:60px;
-    background:rgba(10,10,10,.95); backdrop-filter:blur(12px);
-    border-top:0.5px solid rgba(255,255,255,.07);
-    display:flex; align-items:center; justify-content:space-around; z-index:1000; 
+/* Desktop : tailles plus grandes */
+@media(min-width:768px){
+  .floater{ font-size:var(--size-desktop); }
 }
-.snav-item { 
-    flex:1; display:flex; flex-direction:column; align-items:center;
-    gap:3px; text-decoration:none; color:#555; transition:color .2s; padding:8px 0; 
-}
-.snav-item.active { color:#f0ede8; }
-.snav-item i { font-size:22px; }
-.snav-item span { font-size:10px; letter-spacing:.3px; font-family: sans-serif; }
-
-/* HEADER */
-header{
-  position:relative;z-index:10;padding:40px 20px;
-  display:flex;justify-content:center;align-items:center;
-}
-.brand{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);opacity:0.8}
-
-/* HERO */
-.hero{
-  position:relative;z-index:10;text-align:center;padding:60px 20px 100px;
-  max-width:800px;margin:0 auto;
-}
-.hero h1{font-size:clamp(40px,12vw,90px);font-weight:400;line-height:1;margin-bottom:20px;font-style:italic}
-.hero p{font-size:18px;color:var(--muted);max-width:500px;margin:0 auto 40px;line-height:1.6}
-
-/* DOG BUTTON */
-.dog-container{position:relative;display:inline-block;cursor:pointer;margin-bottom:40px}
-.dog-img{width:120px;height:120px;border-radius:50%;border:1px solid var(--border);padding:5px;transition:transform .4s cubic-bezier(.17,.67,.83,.67)}
-.dog-container:hover .dog-img{transform:scale(1.05) rotate(5deg)}
-.status-dot{position:absolute;bottom:10px;right:10px;width:12px;height:12px;background:#55efc4;border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 15px rgba(85,239,196,0.5)}
-
-/* FLOATING ELEMENTS */
-#floaters{position:fixed;inset:0;pointer-events:none;z-index:1}
-.floater{position:absolute;font-size:var(--size-desktop);opacity:0;white-space:nowrap;user-select:none;animation:float var(--dur) linear var(--delay) infinite}
-
-@keyframes float{
-  0%{transform:translateY(110vh) rotate(var(--rot));opacity:0}
-  10%{opacity:0.4}
-  90%{opacity:0.4}
-  100%{transform:translateY(-20vh) rotate(var(--rotEnd));opacity:0}
+/* Mobile : tailles plus petites */
+@media(max-width:767px){
+  .floater{ font-size:var(--size-mobile); }
 }
 
-/* BARKS */
-.bark{position:fixed;z-index:100;pointer-events:none;font-size:14px;font-weight:bold;color:var(--accent);text-shadow:0 0 10px rgba(201,169,110,0.3)}
+main{
+  position:relative;z-index:2;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px 60px;gap:0;
+}
 
-@media (max-width:600px){
-  .hero h1{font-size:50px}
-  .floater{font-size:var(--size-mobile)}
+header{text-align:center;margin-bottom:36px}
+.eyebrow{font-family:-apple-system,sans-serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+h1{font-size:clamp(28px,6vw,54px);font-weight:400;letter-spacing:-.5px;line-height:1.15;color:var(--text);margin-bottom:6px}
+h1 em{font-style:italic;color:var(--accent)}
+.dedic{
+  font-family:-apple-system,sans-serif;font-size:18px;
+  letter-spacing:.5px;margin-top:14px;
+  color:rgba(240,237,232,.5);
+}
+.dedic span{
+  font-style:italic;font-weight:700;
+  background:linear-gradient(90deg,#c9a96e,#fff8e7,#e8c97a,#c9a96e);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shine 2.5s linear infinite;
+}
+@keyframes shine{to{background-position:200% center}}
+
+.sep{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--border),transparent);margin:0 auto 36px}
+
+/* DOG SECTION WRAP — contient frame + couronne + nom */
+.dog-section{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:48px;gap:14px;
+}
+
+.dog-section-wrap{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  /* espace en haut pour la couronne */
+  padding-top:36px;
+}
+
+.dog-crown{
+  position:absolute;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  font-size:36px;
+  z-index:10;
+  animation:bob 2s ease-in-out infinite;
+  line-height:1;
+}
+@keyframes bob{
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(-6px)}
+}
+
+.dog-frame{
+  width:200px;height:200px;border-radius:50%;
+  border:1px solid rgba(201,169,110,.3);padding:4px;
+  position:relative;cursor:pointer;
+  transition:border-color .3s,transform .3s;
+  /* overflow:hidden retiré pour ne pas couper les halos */
+}
+.dog-frame:hover{border-color:rgba(201,169,110,.8);transform:scale(1.04)}
+.dog-frame:active{transform:scale(.97)}
+
+/* Le clip rond est appliqué uniquement à l'image */
+.dog-frame img{
+  width:100%;height:100%;
+  border-radius:50%;
+  object-fit:cover;display:block;
+  filter:sepia(.1) brightness(.95);
+  position:relative;z-index:2;
+}
+
+.dog-halo{
+  position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+             linear-gradient(135deg,rgba(201,169,110,.6),transparent 50%,rgba(201,169,110,.4)) border-box;
+  animation:spin 6s linear infinite;
+  z-index:1;
+}
+.dog-halo2{
+  position:absolute;inset:-16px;border-radius:50%;
+  border:1px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+             linear-gradient(225deg,rgba(201,169,110,.3),transparent 50%,rgba(201,169,110,.15)) border-box;
+  animation:spin 10s linear infinite reverse;
+  z-index:1;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.dog-name{
+  font-family:-apple-system,sans-serif;font-size:11px;
+  letter-spacing:4px;text-transform:uppercase;color:var(--muted);
+  text-align:center;
+  margin-top:10px;
+}
+
+/* BARK BURST */
+.bark{
+  position:fixed;font-family:-apple-system,sans-serif;font-size:13px;font-weight:800;
+  color:var(--accent);pointer-events:none;z-index:999;white-space:nowrap;
+  letter-spacing:.5px;
+}
+
+/* CARDS GRID */
+.cards{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;width:100%;max-width:500px;
+}
+.card{
+  position:relative;border-radius:20px;text-decoration:none;color:var(--text);
+  border:1px solid var(--border);overflow:hidden;
+  padding:28px 20px 22px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:160px;
+  transition:transform .25s,box-shadow .25s;
+  background:rgba(255,255,255,.02);
+}
+.card-bg{
+  position:absolute;inset:0;opacity:.12;transition:opacity .3s;
+  background:var(--grad);
+}
+.card:hover .card-bg{opacity:.22}
+.card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%);
+}
+.card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.card-icon{
+  position:absolute;top:18px;right:18px;font-size:30px;z-index:2;
+  transition:transform .3s;
+}
+.card:hover .card-icon{transform:scale(1.15) rotate(-5deg)}
+.card-content{position:relative;z-index:2}
+.card-title{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.card-sub{font-size:11px;color:rgba(255,255,255,.5);font-family:-apple-system,sans-serif;line-height:1.4}
+
+/* DISABLED */
+.card.disabled{opacity:.35;pointer-events:none;cursor:default}
+
+.soon{
+  display:inline-block;
+  font-family:-apple-system,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  background:rgba(201,169,110,.12);color:var(--accent);
+  border:1px solid rgba(201,169,110,.2);border-radius:6px;
+  padding:2px 7px;margin-top:6px;
+}
+
+footer{
+  margin-top:56px;text-align:center;
+  font-family:-apple-system,sans-serif;font-size:11px;
+  color:rgba(255,255,255,.12);letter-spacing:3px;text-transform:uppercase;
+}
+
+/* Responsive mobile */
+@media(max-width:480px){
+  .cards{max-width:100%}
+  .dog-frame{width:170px;height:170px}
+  .dog-crown{font-size:30px}
+  header{margin-bottom:28px}
+  .sep{height:28px;margin-bottom:28px}
+  .dog-section{margin-bottom:36px}
 }
 </style>
 </head>
 <body>
 
-<nav id="smeh-nav">
-    <a class="snav-item active" href="index.html"><i class="ti ti-home"></i><span>Accueil</span></a>
-    <a class="snav-item" href="scroll.html"><i class="ti ti-photo"></i><span>Tikigram</span></a>
-    <a class="snav-item" href="musique.html"><i class="ti ti-music"></i><span>Musique</span></a>
-    <a class="snav-item" href="video.html"><i class="ti ti-video"></i><span>Vidéos</span></a>
-    <a class="snav-item" href="geo.html"><i class="ti ti-world"></i><span>Géo Jeu</span></a>
-    <a class="snav-item" href="feedback_page.html"><i class="ti ti-bulb"></i><span>Idées</span></a>
-</nav>
+<div class="stars" id="stars"></div>
+<div class="horizon"></div>
+<div class="floaters" id="floaters"></div>
 
-<div id="floaters"></div>
+<main>
+  <header>
+    <h1>Smeh <em>Ibiza</em><br>2026</h1>
+    <p class="dedic">dédicace à <span>Boulèche</span> 🐾</p>
+  </header>
 
-<header>
-  <div class="brand">Est. 2026 • Ibiza</div>
-</header>
+  <div class="sep"></div>
 
-<main class="hero">
-  <div class="dog-container" id="dogBtn">
-    <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400" alt="Smeh" class="dog-img">
-    <div class="status-dot"></div>
+  <div class="dog-section">
+    <div class="dog-section-wrap">
+      <!-- Couronne EN DEHORS du dog-frame → pas coupée par overflow:hidden -->
+      <div class="dog-crown">👑</div>
+      <div class="dog-frame" id="dogBtn">
+        <div class="dog-halo2"></div>
+        <div class="dog-halo"></div>
+        <img src="bouleche.jpg" alt="Boulèche">
+      </div>
+      <span class="dog-name">Boulèche</span>
+    </div>
   </div>
-  
-  <h1>L'Expérience Smeh</h1>
-  <p>Une collection privée de moments, de sons et de visions capturés sous le soleil d'Ibiza.</p>
+
+  <nav class="cards">
+    <a href="scroll.html" class="card" style="--grad:linear-gradient(135deg,#ff2d78,#9b2dff)">
+      <div class="card-bg"></div>
+      <span class="card-icon">📸</span>
+      <div class="card-content">
+        <div class="card-title">Tikigram</div>
+        <div class="card-sub">Les refs à avoir absolument en 2026</div>
+      </div>
+    </a>
+    <a href="musique.html" class="card" style="--grad:linear-gradient(135deg,#00ff88,#00c8ff)">
+      <div class="card-bg"></div>
+      <span class="card-icon">🎵</span>
+      <div class="card-content">
+        <div class="card-title">Musique</div>
+        <div class="card-sub">La playlist du voyage</div>
+      </div>
+    </a>
+    <a href="video.html" class="card" style="--grad:linear-gradient(135deg,#ff6b00,#ffe600)">
+      <div class="card-bg"></div>
+      <span class="card-icon">🎬</span>
+      <div class="card-content">
+        <div class="card-title">Vidéos</div>
+        <div class="card-sub">Tous les clips du trip</div>
+      </div>
+    </a>
+    <a href="feedback_page.html" class="card" style="--grad:linear-gradient(135deg,#8E44AD,#FF007F)">
+      <div class="card-bg"></div>
+      <span class="card-icon">📝​</span>
+      <div class="card-content">
+        <div class="card-title">Améliorations</div>
+        <div class="card-sub">Donnez votre avis</div>
+      </div>
+    </a>
+    <a href="geo.html" class="card" style="--grad:linear-gradient(135deg,CadetBlue,DeepSkyBlue)">
+      <div class="card-bg"></div>
+      <span class="card-icon">🌍​</span>
+      <div class="card-content">
+        <div class="card-title">Geo jeu</div>
+        <div class="card-sub">brainrot drapeaux</div>
+      </div>
+    </a>
+  </nav>
+
+  <footer>smeh · ibiza · mmxxvi</footer>
 </main>
 
 <script>
-// FLOATING CONTENT (Words & Icons)
-const words = ["Smeh","Ibiza","2026","Love","Sun","Vibes","Chill","✨","🌊","🌴","🍹"];
-const colors = ["#c9a96e","#8e8e93","#f0ede8","#555"];
-const fonts = ["'Georgia', serif", "sans-serif", "serif"];
-const floatersEl = document.getElementById('floaters');
+// STARS
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 90; i++) {
+  const el = document.createElement('div');
+  el.className = 'star';
+  const sz = Math.random() * 1.8 + .4;
+  el.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+  starsEl.appendChild(el);
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  words.forEach((word, index) => {
+// FLOATING PHRASES
+const phrases = [
+  "F(x) = Yasmina Khan.",
+  "C'est Jésus",
+  "La main dans le paquet, c'est la meilleure chose au monde",
+  "Gabi bouge tes Locks",
+  "Léo enLéLé",
+  "Le son il tue",
+  "Brocoli Beatz",
+  "Tiki Tiki",
+  "Gnaegnagny",
+  "Guillaume",
+  "Jenny le pompe grondeur",
+  "Le chat de la maison",
+  "DONNE TA PUFF",
+  "Fuck les riches",
+  "BBL comme Jamais",
+  "Carbo à 5h du mat'",
+  "Louis qui se fait niquer à minuit",
+  "La June",
+  "Arrosage de jardin avec sa pisse",
+];
+
+const floatersEl = document.getElementById('floaters');
+const fonts = [
+  'Georgia,serif',
+  '-apple-system,sans-serif',
+  "'Courier New',monospace",
+  'Impact,sans-serif',
+  'Palatino,serif',
+];
+const colors = [
+  'rgba(201,169,110,.8)',
+  'rgba(255,255,255,.7)',
+  'rgba(180,100,255,.8)',
+  'rgba(255,80,120,.8)',
+  'rgba(0,220,200,.75)',
+  'rgba(255,200,60,.85)',
+  'rgba(100,200,255,.8)',
+];
+
+// Détecte mobile ou desktop
+const isMobile = window.innerWidth < 768;
+
+phrases.forEach((txt) => {
+  [0, 1].forEach(() => {
     const f = document.createElement('div');
     f.className = 'floater';
-    f.textContent = word;
-    
-    // Random settings
-    const x = Math.random() * 100 + '%';
-    const dur = 15 + Math.random() * 20;
-    const delay = -(Math.random() * 20) + 's';
-    const rot = Math.random() * 40 - 20;
-    const rotEnd = rot + (Math.random() * 60 - 30);
-    const sizeDesktop = (Math.random() * 20 + 12).toFixed(1) + 'px'; // 12–32px
+    f.textContent = txt;
+
+    const rot = (Math.random() * 40 - 20).toFixed(1);
+    const rotEnd = (Math.random() * 30 - 15).toFixed(1);
+    const dur = (Math.random() * 14 + 12).toFixed(1);
+    const delay = `-${(Math.random() * 20).toFixed(1)}s`;
+    const x = `${(Math.random() * 85).toFixed(1)}%`;
+
+    // Tailles plus variées : mobile 9–22px, desktop 14–38px
+    const sizeDesktop = (Math.random() * 24 + 14).toFixed(1) + 'px'; // 14–38px
     const sizeMobile  = (Math.random() * 13 + 9).toFixed(1) + 'px';  // 9–22px
 
     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -131,7 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     f.style.cssText = `
       --x:${x};
-      left:${x};
       --dur:${dur}s;
       --delay:${delay};
       --rot:${rot}deg;
@@ -146,37 +377,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// DOG CLICK — burst barks
+// DOG CLICK — burst quotes
 const barks = ["OUAF","OUAF OUAF","🐾","👑","WOOF","Boulèche !!","Le roi 🐶"];
 document.getElementById('dogBtn').addEventListener('click', () => {
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 10; i++) {
     const el = document.createElement('div');
     el.className = 'bark';
     el.textContent = barks[Math.floor(Math.random() * barks.length)];
     const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2 - 80;
-    
-    // Position aléatoire autour du clic
-    const tx = (Math.random() - 0.5) * 200;
-    const ty = (Math.random() - 0.5) * 200 - 50;
-    
-    el.style.left = cx + 'px';
-    el.style.top = cy + 'px';
-    el.style.position = 'fixed';
-    el.style.transition = 'all 1s ease-out';
-    el.style.opacity = '1';
-    
+    const cy = window.innerHeight / 2 - 60;
+    el.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);opacity:1;transition:all .9s ease`;
     document.body.appendChild(el);
-
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 80 + Math.random() * 140;
     setTimeout(() => {
-      el.style.transform = `translate(${tx}px, ${ty}px) scale(1.5)`;
+      el.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px),calc(-50% + ${Math.sin(angle)*dist}px)) rotate(${(Math.random()*40-20).toFixed(0)}deg)`;
       el.style.opacity = '0';
-    }, 10);
-
+    }, 20);
     setTimeout(() => el.remove(), 1000);
   }
 });
 </script>
-
 </body>
 </html>
