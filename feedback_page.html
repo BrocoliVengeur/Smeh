@@ -27,6 +27,8 @@
             color: var(--text-main);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            /* Ajout d'une marge en bas pour ne pas que la nav cache le contenu */
+            padding-bottom: 80px; 
         }
 
         .container {
@@ -37,7 +39,22 @@
             padding: 0 1.5rem;
         }
 
-        /* Formulaire principal */
+        /* --- STYLE DE LA NAV BAR --- */
+        #smeh-nav { 
+            position:fixed; bottom:0; left:0; right:0; height:60px;
+            background:rgba(10,10,10,.95); backdrop-filter:blur(12px);
+            border-top:0.5px solid rgba(255,255,255,.07);
+            display:flex; align-items:center; justify-content:space-around; z-index:1000; 
+        }
+        .snav-item { 
+            flex:1; display:flex; flex-direction:column; align-items:center;
+            gap:3px; text-decoration:none; color:#555; transition:color .2s; padding:8px 0; 
+        }
+        .snav-item.active { color:#f0ede8; }
+        .snav-item i { font-size:22px; }
+        .snav-item span { font-size:10px; letter-spacing:.3px; }
+
+        /* --- RESTE DU STYLE ORIGINAL --- */
         .main-content {
             flex: 1;
             display: flex;
@@ -59,12 +76,6 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .feedback-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
         }
 
         textarea {
@@ -112,83 +123,18 @@
             transition: background 0.2s;
         }
 
-        .send-btn:hover { background: var(--primary-hover); }
-        .send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .sidebar { width: 340px; flex-shrink: 0; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .sidebar-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+        .idea-count { background: var(--primary); color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; }
+        .idea-list { display: flex; flex-direction: column; gap: 1rem; max-height: 600px; overflow-y: auto; }
+        .idea-item { background: var(--bg-card); padding: 1rem; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .idea-text { font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.5rem; }
+        .idea-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; }
 
-        /* Sidebar - Liste des idées */
-        .sidebar {
-            width: 340px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .sidebar-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-        }
-
-        .idea-count {
-            background: var(--primary);
-            color: white;
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 20px;
-        }
-
-        .idea-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
-        }
-
-        .idea-item {
-            background: var(--bg-card);
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            animation: slideIn 0.3s ease-out;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .idea-text {
-            font-size: 0.95rem;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-        }
-
-        .idea-meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .empty-hint {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 2rem;
-            font-style: italic;
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-        }
-
-        /* Toast Notification */
         .toast {
             position: fixed;
-            bottom: 2rem;
+            bottom: 5rem; /* Ajusté pour être au dessus de la nav */
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: #1e293b;
@@ -198,17 +144,9 @@
             font-size: 0.9rem;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 100;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-
         .toast.show { transform: translateX(-50%) translateY(0); }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             .container { flex-direction: column; margin: 1rem auto; }
             .sidebar { width: 100%; }
@@ -216,6 +154,15 @@
     </style>
 </head>
 <body>
+
+<nav id="smeh-nav">
+    <a class="snav-item" href="index.html"><i class="ti ti-home"></i><span>Accueil</span></a>
+    <a class="snav-item" href="scroll.html"><i class="ti ti-photo"></i><span>Tikigram</span></a>
+    <a class="snav-item" href="musique.html"><i class="ti ti-music"></i><span>Musique</span></a>
+    <a class="snav-item" href="video.html"><i class="ti ti-video"></i><span>Vidéos</span></a>
+    <a class="snav-item" href="geo.html"><i class="ti ti-world"></i><span>Géo Jeu</span></a>
+    <a class="snav-item active" href="feedback_page.html"><i class="ti ti-bulb"></i><span>Idées</span></a>
+</nav>
 
 <div class="container">
     <main class="main-content">
@@ -258,19 +205,15 @@ const toast = document.getElementById('toast');
 const btn = document.getElementById('sendBtn');
 const charCount = document.getElementById('charCount');
 
-// Mise à jour du compteur de caractères
 input.addEventListener('input', () => {
     charCount.textContent = input.value.length + ' / 500';
 });
 
-// Envoi de l'idée
 function submitIdea() {
     const text = input.value.trim();
     if (!text) return;
-
     btn.disabled = true;
     
-    // Simulation d'un petit délai pour le côté "naturel"
     setTimeout(() => {
         const now = new Date();
         const meta = now.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit'}) + ' à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
@@ -278,11 +221,9 @@ function submitIdea() {
         ideas.unshift({text, meta});
         renderList();
         
-        // Reset
         input.value = '';
         charCount.textContent = '0 / 500';
         
-        // Notification
         toast.classList.add('show');
         setTimeout(() => { 
             toast.classList.remove('show'); 
@@ -291,22 +232,15 @@ function submitIdea() {
     }, 400);
 }
 
-// Raccourci Ctrl + Enter
-input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) submitIdea();
-});
-
-// Rendu de la liste
 function renderList() {
     count.textContent = ideas.length;
-    
     if (ideas.length === 0) {
-        list.innerHTML = '<p class="empty-hint">Aucune idée pour le moment.<br>Soyez le premier !</p>';
+        list.innerHTML = '<p class="empty-hint" style="text-align:center; padding:2rem; border:2px dashed var(--border); border-radius:var(--radius); color:var(--text-muted);">Aucune idée pour le moment.</p>';
         return;
     }
 
     list.innerHTML = ideas.map((idea, i) => `
-        <div class="idea-item">
+        <div class="idea-item" style="animation: slideIn 0.3s ease-out;">
             <div class="idea-text">${escHtml(idea.text)}</div>
             <div class="idea-meta">
                 <i class="ti ti-calendar-event"></i> ${idea.meta} 
@@ -317,7 +251,6 @@ function renderList() {
     `).join('');
 }
 
-// Sécurité : éviter les injections XSS
 function escHtml(s) {
     const div = document.createElement('div');
     div.textContent = s;
