@@ -134,20 +134,20 @@
     border-top:0.5px solid var(--border);
     display:flex;align-items:center;justify-content:space-around;z-index:100;
   }
-  .nav-item, .snav-item{
+  .nav-item{
     flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
     background:none;border:none;cursor:pointer;padding:8px 0;
     color:var(--muted);transition:color .2s;
     text-decoration:none;
   }
   .nav-item.active{color:var(--text)}
-  .nav-item i, .snav-item i{font-size:24px}
-  .nav-item span, .snav-item span{font-size:10px;letter-spacing:.3px}
+  .nav-item i{font-size:24px}
+  .nav-item span{font-size:10px;letter-spacing:.3px}
   .nav-dot{
     width:4px;height:4px;border-radius:50%;background:var(--accent);
     position:absolute;top:6px;
   }
-  .nav-item, .snav-item{position:relative}
+  .nav-item{position:relative}
 
   /* STORY BAR (fake) */
   .story-bar{
@@ -190,6 +190,7 @@
 </head>
 <body>
 
+<!-- TOP BAR -->
 <header id="topbar">
   <span class="logo">tikigram</span>
   <div class="top-live">
@@ -198,36 +199,24 @@
   </div>
 </header>
 
+<!-- FEED -->
 <main id="feed"></main>
 
+<!-- SURPRISE TOOLTIP -->
 <div class="surprise-tooltip" id="surpriseTooltip"></div>
 
+<!-- BOTTOM NAV -->
+
+
 <nav id="navbar">
-  <a class="nav-item active" href="index.html" aria-label="Accueil">
-    <i class="ti ti-home"></i>
-    <span>Accueil</span>
-  </a>
-  <a class="nav-item" href="index.html#tikigram" aria-label="Tikigram">
-    <i class="ti ti-photo"></i>
-    <span>Tikigram</span>
-  </a>
-  <a class="nav-item" href="musique.html" aria-label="Musique">
-    <i class="ti ti-music"></i>
-    <span>Musique</span>
-  </a>
-  <a class="nav-item" href="video.html" aria-label="Vidéos">
-    <i class="ti ti-video"></i>
-    <span>Vidéos</span>
-  </a>
-  <a class="snav-item" href="geo.html">
-    <i class="ti ti-world"></i>
-    <span>Géo Jeu</span>
-  </a>
-  <a class="snav-item" href="feedback_page.html">
-    <i class="ti ti-bulb"></i>
-    <span>Idées</span>
-  </a>
+  <a class="nav-item" href="index.html"><i class="ti ti-home"></i><span>Accueil</span></a>
+  <a class="nav-item active" href="scroll.html"><i class="ti ti-photo"></i><span>Tikigram</span></a>
+  <a class="nav-item" href="musique.html"><i class="ti ti-music"></i><span>Musique</span></a>
+  <a class="nav-item" href="video.html"><i class="ti ti-video"></i><span>Vidéos</span></a>
+  <a class="nav-item" href="geo.html"><i class="ti ti-world"></i><span>Géo Jeu</span></a>
+  <a class="nav-item" href="feedback_page.html"><i class="ti ti-bulb"></i><span>Idées</span></a>
 </nav>
+
 
 <script>
 // Vidéos : x (1).mp4 → x (64).mp4
