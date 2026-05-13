@@ -25,11 +25,18 @@
     background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   }
-  #topbar .top-actions{display:flex;gap:8px}
-  .top-btn{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;
-    width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-    border-radius:50%;transition:background .2s,color .2s;}
-  .top-btn:hover{background:var(--surface2);color:var(--text)}
+  .top-live{
+    display:flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);
+    border-radius:20px;padding:5px 12px;font-family:-apple-system,sans-serif;
+    font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.3px;
+  }
+  .top-live .dot{
+    width:6px;height:6px;border-radius:50%;background:#e91e8c;
+    box-shadow:0 0 6px #e91e8c;
+    animation:pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 
   /* FEED */
   #feed{
@@ -131,6 +138,7 @@
     flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
     background:none;border:none;cursor:pointer;padding:8px 0;
     color:var(--muted);transition:color .2s;
+    text-decoration:none;
   }
   .nav-item.active{color:var(--text)}
   .nav-item i{font-size:24px}
@@ -185,9 +193,9 @@
 <!-- TOP BAR -->
 <header id="topbar">
   <span class="logo">tikigram</span>
-  <div class="top-actions">
-    <button class="top-btn" id="searchBtn" aria-label="Rechercher" title="Rechercher"><i class="ti ti-search"></i></button>
-    <button class="top-btn" id="notifBtn" aria-label="Notifications" title="Notifications"><i class="ti ti-bell"></i></button>
+  <div class="top-live">
+    <div class="dot"></div>
+    ibiza 2026
   </div>
 </header>
 
@@ -199,27 +207,22 @@
 
 <!-- BOTTOM NAV -->
 <nav id="navbar">
-  <button class="nav-item active" data-page="home" aria-label="Accueil">
+  <a class="nav-item active" href="index.html" aria-label="Accueil">
     <i class="ti ti-home"></i>
     <span>Accueil</span>
-  </button>
-  <button class="nav-item" data-page="search" aria-label="Explorer">
-    <i class="ti ti-compass"></i>
-    <span>Explorer</span>
-  </button>
-  <button class="nav-item" data-page="add" aria-label="Ajouter">
-    <i class="ti ti-circle-plus"></i>
-    <span>Ajouter</span>
-  </button>
-  <button class="nav-item" data-page="album" aria-label="Album">
-    <i class="ti ti-photo-album"></i>
-    <span>Album</span>
-    <div class="nav-dot"></div>
-  </button>
-  <button class="nav-item" data-page="profile" aria-label="Profil">
-    <i class="ti ti-user-circle"></i>
-    <span>Profil</span>
-  </button>
+  </a>
+  <a class="nav-item" href="index.html#tikigram" aria-label="Tikigram">
+    <i class="ti ti-photo"></i>
+    <span>Tikigram</span>
+  </a>
+  <a class="nav-item" href="musique.html" aria-label="Musique">
+    <i class="ti ti-music"></i>
+    <span>Musique</span>
+  </a>
+  <a class="nav-item" href="video.html" aria-label="Vidéos">
+    <i class="ti ti-video"></i>
+    <span>Vidéos</span>
+  </a>
 </nav>
 
 <script>
