@@ -1,0 +1,289 @@
+<!-- Remplacez la partie <script> de votre fichier par celle-ci -->
+<script>
+/* ═══════════════════════════════════════
+   STATE & INITIAL DATA
+═══════════════════════════════════════ */
+// On ajoute la vidéo YouTube de Zola par défaut
+let videos = [{
+    name: "TEST",
+    ext: "YouTube",
+    url: "https://www.youtube.com/embed/Nf9OHbVHWio",
+    cat: "rap",
+    duration: 184, // env 3:04
+    thumb: "https://img.youtube.com/vi/Nf9OHbVHWio/mqdefault.jpg",
+    type: "youtube",
+    youtubeId: "Nf9OHbVHWio"
+}];
+
+let filtered = [];
+let activeCat = 'tout';
+let curIdx = 0;
+let isPlaying = false;
+let shuffle = false, repeat = false;
+let currentVideoEl = null;
+
+const fmt = s => {
+  if (!s || isNaN(s)) return '--:--';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+};
+
+/* ═══════════════════════════════════════
+   CATEGORY
+═══════════════════════════════════════ */
+const CAT_INFO = {
+  rap:      {label:'Clip Rap',  cls:'cat-rap',     emoji:'🎤'},
+  vlog:     {label:'Vlog',      cls:'cat-vlog',     emoji:'📹'},
+  vacances: {label:'Vacances',  cls:'cat-vacances',  emoji:'🌴'},
+  film:     {label:'Film',      cls:'cat-film',      emoji:'🎥'},
+  autre:    {label:'Autre',     cls:'cat-autre',     emoji:'📁'},
+};
+
+function guessCat(name) {
+  const n = name.toLowerCase();
+  if (/rap|drill|trap|freestyle|clip|beat|cypher|zola/.test(n)) return 'rap';
+  if (/vlog|daily|day|routine|hausse|haul|makeup|reaction/.test(n)) return 'vlog';
+  if (/vacanc|trip|travel|beach|plage|voyage|summer|été/.test(n)) return 'vacances';
+  if (/film|movie|short|court|serie|episode|ep\d/.test(n)) return 'film';
+  return 'autre';
+}
+
+/* ═══════════════════════════════════════
+   THUMBNAIL GENERATION (LOCAL ONLY)
+═══════════════════════════════════════ */
+function genThumb(url, cb) {
+  const v = document.createElement('video');
+  v.src = url; v.muted = true; v.preload = 'metadata';
+  v.addEventListener('loadeddata', () => {
+    v.currentTime = Math.min(2, v.duration * 0.1);
+  });
+  v.addEventListener('seeked', () => {
+    const c = document.createElement('canvas');
+    c.width = 320; c.height = 180;
+    c.getContext('2d').drawImage(v, 0, 0, 320, 180);
+    cb(c.toDataURL('image/jpeg', .7), v.duration);
+    v.src = '';
+  });
+  v.load();
+}
+
+/* ═══════════════════════════════════════
+   ADD FILES
+═══════════════════════════════════════ */
+function addFiles(files) {
+  [...files].forEach(f => {
+    if (!f.type.startsWith('video/')) return;
+    const url = URL.createObjectURL(f);
+    const name = f.name.replace(/\.[^.]+$/, '');
+    const ext = f.name.split('.').pop().toLowerCase();
+    const cat = guessCat(name);
+    const obj = {name, ext, url, cat, duration: null, thumb: null, type: 'local'};
+    videos.push(obj);
+    genThumb(url, (thumb, dur) => {
+      obj.thumb = thumb; obj.duration = dur;
+      applyFilter();
+    });
+  });
+  applyFilter();
+}
+
+document.getElementById('fileInput').addEventListener('change', e => addFiles(e.target.files));
+
+const dropArea = document.getElementById('dropArea');
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('dragover'); });
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
+dropArea.addEventListener('drop', e => { e.preventDefault(); dropArea.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+
+/* ═══════════════════════════════════════
+   FILTER
+═══════════════════════════════════════ */
+document.querySelectorAll('.filter-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    activeCat = b.dataset.cat;
+    applyFilter();
+  });
+});
+
+function applyFilter() {
+  filtered = activeCat === 'tout' ? [...videos] : videos.filter(v => v.cat === activeCat);
+  renderGrid();
+}
+
+/* ═══════════════════════════════════════
+   GRID RENDER
+═══════════════════════════════════════ */
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const lbl  = document.getElementById('sectionLabel');
+  lbl.textContent = `${filtered.length} vidéo${filtered.length > 1 ? 's' : ''}`;
+  grid.innerHTML = '';
+  
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-msg">Aucune vidéo ici</div>`;
+    return;
+  }
+  
+  filtered.forEach((v, i) => {
+    const ci = CAT_INFO[v.cat] || CAT_INFO.autre;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="thumb">
+        <img class="thumb-img" src="${v.thumb || ''}" style="${!v.thumb ? 'display:none' : ''}" />
+        ${!v.thumb ? `<canvas class="thumb-canvas" width="320" height="180"></canvas>` : ''}
+        <div class="play-overlay">
+          <div class="play-circle">
+            <svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <span class="cat-badge ${ci.cls}">${ci.emoji} ${ci.label}</span>
+        ${v.duration ? `<span class="duration-badge">${fmt(v.duration)}</span>` : ''}
+      </div>
+      <div class="card-info">
+        <div class="card-title">${v.name}</div>
+        <div class="card-meta">${v.ext.toUpperCase()} ${v.duration ? '· ' + fmt(v.duration) : ''}</div>
+      </div>`;
+    card.addEventListener('click', () => openModal(i));
+    grid.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════════════
+   MODAL & SLIDER BUILD
+═══════════════════════════════════════ */
+function buildSlides() {
+  const track = document.getElementById('slidesTrack');
+  track.innerHTML = '';
+  filtered.forEach((v, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    
+    if (v.type === 'youtube') {
+      // Pour YouTube, on utilise un iframe
+      slide.innerHTML = `<iframe width="100%" height="100%" src="${v.url}?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    } else {
+      // Pour les fichiers locaux
+      const vid = document.createElement('video');
+      vid.src = v.url;
+      vid.preload = 'metadata';
+      vid.volume = parseFloat(document.getElementById('mVol').value);
+      vid.addEventListener('timeupdate', () => {
+        if (i !== curIdx) return;
+        document.getElementById('mProg').value = vid.duration ? (vid.currentTime/vid.duration)*100 : 0;
+        document.getElementById('mCur').textContent = fmt(vid.currentTime);
+        document.getElementById('mDur').textContent = fmt(vid.duration);
+      });
+      vid.addEventListener('ended', nextVideo);
+      slide.appendChild(vid);
+    }
+    track.appendChild(slide);
+  });
+}
+
+function openModal(filteredIndex) {
+  curIdx = filteredIndex;
+  buildSlides();
+  buildSidePlaylist();
+  goTo(curIdx, false);
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function goTo(idx, autoPlay = true) {
+  pauseAll();
+  curIdx = idx;
+  document.getElementById('slidesTrack').style.transform = `translateX(-${idx * 100}%)`;
+  
+  const v = filtered[idx];
+  document.getElementById('modalTitle').textContent = v.name;
+  
+  // Masquer les contrôles de temps si c'est YouTube (car ils sont gérés par le lecteur YT)
+  const controls = document.querySelector('.prog-row');
+  controls.style.opacity = v.type === 'youtube' ? '0.3' : '1';
+  controls.style.pointerEvents = v.type === 'youtube' ? 'none' : 'auto';
+
+  updateSideActive();
+  
+  if (autoPlay && v.type !== 'youtube') {
+    const vid = getVideoEl(idx);
+    if (vid) vid.play().catch(()=>{});
+  }
+}
+
+function getVideoEl(idx) {
+  const slides = document.querySelectorAll('.slide');
+  return slides[idx] ? slides[idx].querySelector('video') : null;
+}
+
+function pauseAll() {
+  document.querySelectorAll('.slide video').forEach(v => v.pause());
+  setPlayState(false);
+}
+
+function togglePlay() {
+  const v = filtered[curIdx];
+  if (v.type === 'youtube') return; // Le bouton play perso ne gère pas l'iframe YT directement ici
+  const vid = getVideoEl(curIdx);
+  if (!vid) return;
+  vid.paused ? vid.play() : vid.pause();
+}
+
+function setPlayState(playing) {
+  isPlaying = playing;
+  document.getElementById('mIconPlay').style.display  = playing?'none':'';
+  document.getElementById('mIconPause').style.display = playing?'':'none';
+}
+
+/* ═══════════════════════════════════════
+   AUTRES FONCTIONS (A GARDER)
+═══════════════════════════════════════ */
+function buildSidePlaylist() {
+  const list = document.getElementById('plList');
+  list.innerHTML = '';
+  document.getElementById('plBadge').textContent = `· ${filtered.length}`;
+  filtered.forEach((v, i) => {
+    const ci = CAT_INFO[v.cat] || CAT_INFO.autre;
+    const item = document.createElement('div');
+    item.className = 'pl-item' + (i===curIdx?' active':'');
+    item.dataset.idx = i;
+    item.innerHTML = `
+      <div class="pl-thumb">
+        <img src="${v.thumb || ''}" alt=""/>
+      </div>
+      <div class="pl-item-info">
+        <div class="pl-item-title">${v.name}</div>
+        <div class="pl-item-cat">${ci.emoji} ${ci.label}</div>
+        <div class="pl-item-dur">${fmt(v.duration)}</div>
+      </div>`;
+    item.addEventListener('click', () => goTo(i, true));
+    list.appendChild(item);
+  });
+}
+
+function updateSideActive() {
+  document.querySelectorAll('.pl-item').forEach(el => el.classList.toggle('active', +el.dataset.idx === curIdx));
+}
+
+function nextVideo() {
+  let next = curIdx + 1;
+  if (next < filtered.length) goTo(next, true);
+}
+function prevVideo() {
+  let prev = curIdx - 1;
+  if (prev >= 0) goTo(prev, true);
+}
+function closeModal() {
+  pauseAll();
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* INIT */
+document.getElementById('closeBtn').addEventListener('click', closeModal);
+document.getElementById('mPlay').addEventListener('click', togglePlay);
+document.getElementById('mNext').addEventListener('click', nextVideo);
+document.getElementById('mPrev').addEventListener('click', prevVideo);
+applyFilter();
+</script>
