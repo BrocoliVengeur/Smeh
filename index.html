@@ -24,7 +24,7 @@ body::before{
 .floater{
   position:absolute;bottom:-80px;
   font-family:-apple-system,sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.5px;
+  font-weight:700;letter-spacing:.5px;
   color:rgba(201,169,110,.55);
   white-space:nowrap;
   animation:floatUp var(--dur) linear infinite var(--delay);
@@ -37,9 +37,22 @@ body::before{
   100%{transform:translateY(-110vh) rotate(calc(var(--rot) + var(--rotEnd)));opacity:0}
 }
 
-main{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;gap:0}
+/* Desktop : tailles plus grandes */
+@media(min-width:768px){
+  .floater{ font-size:var(--size-desktop); }
+}
+/* Mobile : tailles plus petites */
+@media(max-width:767px){
+  .floater{ font-size:var(--size-mobile); }
+}
 
-header{text-align:center;margin-bottom:48px}
+main{
+  position:relative;z-index:2;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px 60px;gap:0;
+}
+
+header{text-align:center;margin-bottom:36px}
 .eyebrow{font-family:-apple-system,sans-serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
 h1{font-size:clamp(28px,6vw,54px);font-weight:400;letter-spacing:-.5px;line-height:1.15;color:var(--text);margin-bottom:6px}
 h1 em{font-style:italic;color:var(--accent)}
@@ -57,25 +70,64 @@ h1 em{font-style:italic;color:var(--accent)}
 }
 @keyframes shine{to{background-position:200% center}}
 
-.sep{width:1px;height:48px;background:linear-gradient(to bottom,transparent,var(--border),transparent);margin:0 auto 48px}
+.sep{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--border),transparent);margin:0 auto 36px}
 
-/* DOG — GROSSE */
-.dog-section{display:flex;flex-direction:column;align-items:center;margin-bottom:56px;gap:14px}
+/* DOG SECTION WRAP — contient frame + couronne + nom */
+.dog-section{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:48px;gap:14px;
+}
+
+.dog-section-wrap{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  /* espace en haut pour la couronne */
+  padding-top:36px;
+}
+
+.dog-crown{
+  position:absolute;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  font-size:36px;
+  z-index:10;
+  animation:bob 2s ease-in-out infinite;
+  line-height:1;
+}
+@keyframes bob{
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(-6px)}
+}
+
 .dog-frame{
-  width:220px;height:220px;border-radius:50%;
+  width:200px;height:200px;border-radius:50%;
   border:1px solid rgba(201,169,110,.3);padding:4px;
   position:relative;cursor:pointer;
   transition:border-color .3s,transform .3s;
+  /* overflow:hidden retiré pour ne pas couper les halos */
 }
 .dog-frame:hover{border-color:rgba(201,169,110,.8);transform:scale(1.04)}
 .dog-frame:active{transform:scale(.97)}
-.dog-frame img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;filter:sepia(.1) brightness(.95)}
+
+/* Le clip rond est appliqué uniquement à l'image */
+.dog-frame img{
+  width:100%;height:100%;
+  border-radius:50%;
+  object-fit:cover;display:block;
+  filter:sepia(.1) brightness(.95);
+  position:relative;z-index:2;
+}
+
 .dog-halo{
   position:absolute;inset:-8px;border-radius:50%;
   border:1px solid transparent;
   background:linear-gradient(var(--bg),var(--bg)) padding-box,
              linear-gradient(135deg,rgba(201,169,110,.6),transparent 50%,rgba(201,169,110,.4)) border-box;
   animation:spin 6s linear infinite;
+  z-index:1;
 }
 .dog-halo2{
   position:absolute;inset:-16px;border-radius:50%;
@@ -83,11 +135,16 @@ h1 em{font-style:italic;color:var(--accent)}
   background:linear-gradient(var(--bg),var(--bg)) padding-box,
              linear-gradient(225deg,rgba(201,169,110,.3),transparent 50%,rgba(201,169,110,.15)) border-box;
   animation:spin 10s linear infinite reverse;
+  z-index:1;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
-.dog-crown{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:40px;animation:bob 2s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
-.dog-name{font-family:-apple-system,sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
+
+.dog-name{
+  font-family:-apple-system,sans-serif;font-size:11px;
+  letter-spacing:4px;text-transform:uppercase;color:var(--muted);
+  text-align:center;
+  margin-top:10px;
+}
 
 /* BARK BURST */
 .bark{
@@ -140,7 +197,21 @@ h1 em{font-style:italic;color:var(--accent)}
   padding:2px 7px;margin-top:6px;
 }
 
-footer{margin-top:56px;text-align:center;font-family:-apple-system,sans-serif;font-size:11px;color:rgba(255,255,255,.12);letter-spacing:3px;text-transform:uppercase}
+footer{
+  margin-top:56px;text-align:center;
+  font-family:-apple-system,sans-serif;font-size:11px;
+  color:rgba(255,255,255,.12);letter-spacing:3px;text-transform:uppercase;
+}
+
+/* Responsive mobile */
+@media(max-width:480px){
+  .cards{max-width:100%}
+  .dog-frame{width:170px;height:170px}
+  .dog-crown{font-size:30px}
+  header{margin-bottom:28px}
+  .sep{height:28px;margin-bottom:28px}
+  .dog-section{margin-bottom:36px}
+}
 </style>
 </head>
 <body>
@@ -151,23 +222,24 @@ footer{margin-top:56px;text-align:center;font-family:-apple-system,sans-serif;fo
 
 <main>
   <header>
-    <p class="eyebrow">Été 2026</p>
     <h1>Smeh <em>Ibiza</em><br>2026</h1>
     <p class="dedic">dédicace à <span>Boulèche</span> 🐾</p>
   </header>
 
   <div class="sep"></div>
 
-
-  <div class="dog-section-wrap" style="position:relative;display:inline-block">
-  <div class="dog-frame" id="dogBtn">
-    <div class="dog-halo2"></div>
-    <div class="dog-halo"></div>
-    <img src="bouleche.jpg" alt="Boulèche">
+  <div class="dog-section">
+    <div class="dog-section-wrap">
+      <!-- Couronne EN DEHORS du dog-frame → pas coupée par overflow:hidden -->
+      <div class="dog-crown">👑</div>
+      <div class="dog-frame" id="dogBtn">
+        <div class="dog-halo2"></div>
+        <div class="dog-halo"></div>
+        <img src="bouleche.jpg" alt="Boulèche">
+      </div>
+      <span class="dog-name">Boulèche</span>
+    </div>
   </div>
-  <div class="dog-crown">👑</div>   <!-- sorti du frame -->
-  <span class="dog-name">Boulèche</span>
-</div>
 
   <nav class="cards">
     <a href="scroll.html" class="card" style="--grad:linear-gradient(135deg,#ff2d78,#9b2dff)">
@@ -210,16 +282,17 @@ footer{margin-top:56px;text-align:center;font-family:-apple-system,sans-serif;fo
 
 <script>
 // STARS
-const starsEl=document.getElementById('stars');
-for(let i=0;i<90;i++){
-  const el=document.createElement('div');el.className='star';
-  const sz=Math.random()*1.8+.4;
-  el.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 90; i++) {
+  const el = document.createElement('div');
+  el.className = 'star';
+  const sz = Math.random() * 1.8 + .4;
+  el.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
   starsEl.appendChild(el);
 }
 
 // FLOATING PHRASES
-const phrases=[
+const phrases = [
   "F(x) = Yasmina Khan.",
   "C'est Jésus",
   "La main dans le paquet, c'est la meilleure chose au monde",
@@ -241,59 +314,80 @@ const phrases=[
   "Arrosage de jardin avec sa pisse",
 ];
 
-const floatersEl=document.getElementById('floaters');
-const fonts=[
+const floatersEl = document.getElementById('floaters');
+const fonts = [
   'Georgia,serif',
   '-apple-system,sans-serif',
   "'Courier New',monospace",
   'Impact,sans-serif',
   'Palatino,serif',
 ];
-const colors=[
-  'rgba(201,169,110,.8)',   // or
-  'rgba(255,255,255,.7)',   // blanc
-  'rgba(180,100,255,.8)',   // violet
-  'rgba(255,80,120,.8)',    // rose
-  'rgba(0,220,200,.75)',    // cyan
-  'rgba(255,200,60,.85)',   // jaune
-  'rgba(100,200,255,.8)',   // bleu clair
+const colors = [
+  'rgba(201,169,110,.8)',
+  'rgba(255,255,255,.7)',
+  'rgba(180,100,255,.8)',
+  'rgba(255,80,120,.8)',
+  'rgba(0,220,200,.75)',
+  'rgba(255,200,60,.85)',
+  'rgba(100,200,255,.8)',
 ];
-phrases.forEach((txt)=>{
-  [0,1].forEach(()=>{
-    const f=document.createElement('div');
-    f.className='floater';f.textContent=txt;
-    const rot=(Math.random()*40-20).toFixed(1);
-    const rotEnd=(Math.random()*30-15).toFixed(1);
-    const dur=(Math.random()*14+12).toFixed(1);
-    const delay=`-${(Math.random()*20).toFixed(1)}s`;
-    const x=`${(Math.random()*88).toFixed(1)}%`;
-    const size=`${(Math.random()*14+9).toFixed(1)}px`;
-    const color=colors[Math.floor(Math.random()*colors.length)];
-    const font=fonts[Math.floor(Math.random()*fonts.length)];
-    f.style.cssText=`--x:${x};--dur:${dur}s;--delay:${delay};--rot:${rot}deg;--rotEnd:${rotEnd}deg;font-size:${size};color:${color};font-family:${font}`;
+
+// Détecte mobile ou desktop
+const isMobile = window.innerWidth < 768;
+
+phrases.forEach((txt) => {
+  [0, 1].forEach(() => {
+    const f = document.createElement('div');
+    f.className = 'floater';
+    f.textContent = txt;
+
+    const rot = (Math.random() * 40 - 20).toFixed(1);
+    const rotEnd = (Math.random() * 30 - 15).toFixed(1);
+    const dur = (Math.random() * 14 + 12).toFixed(1);
+    const delay = `-${(Math.random() * 20).toFixed(1)}s`;
+    const x = `${(Math.random() * 85).toFixed(1)}%`;
+
+    // Tailles plus variées : mobile 9–22px, desktop 14–38px
+    const sizeDesktop = (Math.random() * 24 + 14).toFixed(1) + 'px'; // 14–38px
+    const sizeMobile  = (Math.random() * 13 + 9).toFixed(1) + 'px';  // 9–22px
+
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const font  = fonts[Math.floor(Math.random() * fonts.length)];
+
+    f.style.cssText = `
+      --x:${x};
+      --dur:${dur}s;
+      --delay:${delay};
+      --rot:${rot}deg;
+      --rotEnd:${rotEnd}deg;
+      --size-desktop:${sizeDesktop};
+      --size-mobile:${sizeMobile};
+      color:${color};
+      font-family:${font};
+    `;
+
     floatersEl.appendChild(f);
   });
 });
 
 // DOG CLICK — burst quotes
-const barks=[
-  "OUAF","OUAF OUAF","🐾","👑","WOOF","Boulèche !!","Le roi 🐶"
-];
-document.getElementById('dogBtn').addEventListener('click',()=>{
-  for(let i=0;i<10;i++){
-    const el=document.createElement('div');
-    el.className='bark';
-    el.textContent=barks[Math.floor(Math.random()*barks.length)];
-    const cx=window.innerWidth/2, cy=window.innerHeight/2 - 80;
-    el.style.cssText=`left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);opacity:1;transition:all .9s ease`;
+const barks = ["OUAF","OUAF OUAF","🐾","👑","WOOF","Boulèche !!","Le roi 🐶"];
+document.getElementById('dogBtn').addEventListener('click', () => {
+  for (let i = 0; i < 10; i++) {
+    const el = document.createElement('div');
+    el.className = 'bark';
+    el.textContent = barks[Math.floor(Math.random() * barks.length)];
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2 - 60;
+    el.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);opacity:1;transition:all .9s ease`;
     document.body.appendChild(el);
-    const angle=Math.random()*Math.PI*2;
-    const dist=80+Math.random()*140;
-    setTimeout(()=>{
-      el.style.transform=`translate(calc(-50% + ${Math.cos(angle)*dist}px),calc(-50% + ${Math.sin(angle)*dist}px)) rotate(${(Math.random()*40-20).toFixed(0)}deg)`;
-      el.style.opacity='0';
-    },20);
-    setTimeout(()=>el.remove(),1000);
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 80 + Math.random() * 140;
+    setTimeout(() => {
+      el.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px),calc(-50% + ${Math.sin(angle)*dist}px)) rotate(${(Math.random()*40-20).toFixed(0)}deg)`;
+      el.style.opacity = '0';
+    }, 20);
+    setTimeout(() => el.remove(), 1000);
   }
 });
 </script>
