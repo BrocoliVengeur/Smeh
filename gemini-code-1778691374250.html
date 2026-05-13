@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boîte à Idées</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1000px;
+            margin: 4rem auto;
+            gap: 2.5rem;
+            padding: 0 1.5rem;
+        }
+
+        /* Formulaire principal */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feedback-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .feedback-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feedback-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #f1f5f9;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .send-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover { background: var(--primary-hover); }
+        .send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Sidebar - Liste des idées */
+        .sidebar {
+            width: 340px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .idea-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .idea-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .idea-item {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .idea-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .idea-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .empty-hint {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+            font-style: italic;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; margin: 1rem auto; }
+            .sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <main class="main-content">
+        <div class="feedback-card">
+            <h2><i class="ti ti-bulb text-primary"></i> Proposer une idée</h2>
+            <p>Comment pouvons-nous améliorer votre expérience ?</p>
+            
+            <textarea id="ideaInput" placeholder="Ex: Ajouter un mode sombre pour la lecture de nuit..." maxlength="500"></textarea>
+            
+            <div class="char-count" id="charCount">0 / 500</div>
+            
+            <button class="send-btn" id="sendBtn" onclick="submitIdea()">
+                <i class="ti ti-send"></i> Envoyer la suggestion
+            </button>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="sidebar-title">Suggestions reçues</h3>
+            <span class="idea-count" id="ideaCount">0</span>
+        </div>
+        
+        <div id="ideaList" class="idea-list">
+            <p class="empty-hint">Aucune idée pour le moment.<br>Soyez le premier à contribuer !</p>
+        </div>
+    </aside>
+</div>
+
+<div class="toast" id="toast">
+    <i class="ti ti-circle-check" style="color: #4ade80"></i> Suggestion envoyée avec succès !
+</div>
+
+<script>
+const ideas = [];
+const input = document.getElementById('ideaInput');
+const list = document.getElementById('ideaList');
+const count = document.getElementById('ideaCount');
+const toast = document.getElementById('toast');
+const btn = document.getElementById('sendBtn');
+const charCount = document.getElementById('charCount');
+
+// Mise à jour du compteur de caractères
+input.addEventListener('input', () => {
+    charCount.textContent = input.value.length + ' / 500';
+});
+
+// Envoi de l'idée
+function submitIdea() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    btn.disabled = true;
+    
+    // Simulation d'un petit délai pour le côté "naturel"
+    setTimeout(() => {
+        const now = new Date();
+        const meta = now.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit'}) + ' à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+        
+        ideas.unshift({text, meta});
+        renderList();
+        
+        // Reset
+        input.value = '';
+        charCount.textContent = '0 / 500';
+        
+        // Notification
+        toast.classList.add('show');
+        setTimeout(() => { 
+            toast.classList.remove('show'); 
+            btn.disabled = false; 
+        }, 3000);
+    }, 400);
+}
+
+// Raccourci Ctrl + Enter
+input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) submitIdea();
+});
+
+// Rendu de la liste
+function renderList() {
+    count.textContent = ideas.length;
+    
+    if (ideas.length === 0) {
+        list.innerHTML = '<p class="empty-hint">Aucune idée pour le moment.<br>Soyez le premier !</p>';
+        return;
+    }
+
+    list.innerHTML = ideas.map((idea, i) => `
+        <div class="idea-item">
+            <div class="idea-text">${escHtml(idea.text)}</div>
+            <div class="idea-meta">
+                <i class="ti ti-calendar-event"></i> ${idea.meta} 
+                <span style="color:var(--border)">|</span> 
+                <span>#${ideas.length - i}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Sécurité : éviter les injections XSS
+function escHtml(s) {
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+}
+</script>
+
+</body>
+</html>
