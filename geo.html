@@ -3,126 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projet Géo - À Venir</title>
+    <title>Géo Quiz - À Venir</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --bg-color: #f4f7f6;
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --bg: #ecf0f1;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--primary-color);
+            min-height: 100vh;
         }
 
         /* Bannière À Venir */
-        .header-banner {
+        .coming-soon {
             width: 100%;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+            background: linear-gradient(45deg, #1a1a1a, #2c3e50);
             color: white;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 50px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        .header-banner h1 {
-            font-size: 4rem;
+        .coming-soon h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
             margin: 0;
-            letter-spacing: 8px;
+            letter-spacing: 10px;
             text-transform: uppercase;
-            animation: pulse 2s infinite;
+            animation: pulse 2s infinite ease-in-out;
         }
 
         @keyframes pulse {
-            0% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-            100% { opacity: 0.8; transform: scale(1); }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
         }
 
-        .header-banner p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-top: 10px;
-        }
-
-        /* Conteneur du Jeu */
-        .game-container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 40px 0;
+        /* Jeu */
+        .game-box {
             background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .game-title {
+            margin: 40px 20px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            display: inline-block;
         }
 
-        /* Iframe Responsive */
-        .iframe-wrapper {
-            position: relative;
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .question span {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .flags-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .flag-option {
+            cursor: pointer;
+            border: 4px solid #eee;
+            border-radius: 12px;
             overflow: hidden;
-            width: 100%;
-            padding-top: 56.25%; /* Ratio 16:9 */
+            transition: all 0.2s;
+            aspect-ratio: 3/2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
         }
 
-        .iframe-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
+        .flag-option img {
             width: 100%;
             height: 100%;
-            border: none;
-            border-radius: 8px;
+            object-fit: cover;
         }
 
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: #7f8c8d;
+        .flag-option:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
         }
+
+        .score {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Feedback */
+        .correct { border-color: var(--success) !important; background: #e8f8f0; }
+        .wrong { border-color: var(--error) !important; background: #fdeaea; }
+
     </style>
 </head>
 <body>
 
-    <header class="header-banner">
+    <div class="coming-soon">
         <h1>À VENIR</h1>
-        <p>Le nouveau portail géographique arrive bientôt</p>
-    </header>
-
-    <div class="game-container">
-        <center><h2 class="game-title">Entraînez-vous avec les drapeaux</h2></center>
-        
-        <div class="iframe-wrapper">
-            <iframe src="https://www.seterra.com/fr/vgp/3069?custom=1" 
-                    allowfullscreen>
-            </iframe>
-        </div>
-        
-        <p style="text-align: center; font-style: italic; color: #666;">
-            Astuce : Cliquez sur le drapeau correspondant au pays demandé !
-        </p>
+        <p>Préparez vos passeports, l'aventure commence bientôt.</p>
     </div>
 
-    <footer>
-        &copy; 2026 - Projet Géo Démo
-    </footer>
+    <div class="game-box">
+        <div class="question">Trouve le drapeau de : <span id="target-country">...</span></div>
+        
+        <div class="flags-grid" id="flags-container">
+            </div>
 
+        <div class="score">Score : <span id="score-val">0</span></div>
+    </div>
+
+    <script>
+        const countries = [
+            { name: "France", code: "fr" },
+            { name: "Japon", code: "jp" },
+            { name: "Brésil", code: "br" },
+            { name: "Canada", code: "ca" },
+            { name: "Italie", code: "it" },
+            { name: "Australie", code: "au" },
+            { name: "Allemagne", code: "de" },
+            { name: "Espagne", code: "es" },
+            { name: "Argentine", code: "ar" },
+            { name: "Maroc", code: "ma" },
+            { name: "Grèce", code: "gr" },
+            { name: "Suède", code: "se" }
+        ];
+
+        let score = 0;
+        let currentCorrectAnswer = null;
+
+        function initGame() {
+            // Mélanger les pays et en choisir 4
+            const shuffled = [...countries].sort(() => 0.5 - Math.random());
+            const selection = shuffled.slice(0, 4);
+            
+            // Choisir la cible parmi les 4
+            currentCorrectAnswer = selection[Math.floor(Math.random() * 4)];
+            document.getElementById('target-country').textContent = currentCorrectAnswer.name;
+
+            // Afficher les drapeaux
+            const container = document.getElementById('flags-container');
+            container.innerHTML = '';
+
+            selection.forEach(country => {
+                const div = document.createElement('div');
+                div.className = 'flag-option';
+                div.innerHTML = `<img src="https://flagcdn.com/w320/${country.code}.png" alt="Drapeau">`;
+                div.onclick = () => checkAnswer(country.code, div);
+                container.appendChild(div);
+            });
+        }
+
+        function checkAnswer(code, element) {
+            if (code === currentCorrectAnswer.code) {
+                element.classList.add('correct');
+                score++;
+                document.getElementById('score-val').textContent = score;
+                setTimeout(initGame, 800);
+            } else {
+                element.classList.add('wrong');
+                setTimeout(() => element.classList.remove('wrong'), 500);
+            }
+        }
+
+        // Démarrage initial
+        initGame();
+    </script>
 </body>
 </html>
