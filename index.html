@@ -1,357 +1,402 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boîte à Idées</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smeh Ibiza 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#09090f;--text:#f0ede8;--muted:rgba(240,237,232,.35);--border:rgba(255,255,255,.07);--accent:#c9a96e}
+html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Georgia',serif;overflow-x:hidden}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+.horizon{position:fixed;bottom:0;left:0;right:0;height:40vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,169,110,.1) 0%, transparent 70%)}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d) ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.05}to{opacity:.7}}
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            /* Marge pour la barre de navigation en bas */
-            padding-bottom: 80px;
-        }
+/* FLOATING PHRASES */
+.floaters{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.floater{
+  position:absolute;bottom:-80px;
+  font-family:-apple-system,sans-serif;
+  font-weight:700;letter-spacing:.5px;
+  color:rgba(201,169,110,.55);
+  white-space:nowrap;
+  animation:floatUp var(--dur) linear infinite var(--delay);
+  left:var(--x);opacity:0;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) rotate(var(--rot));opacity:0}
+  8%{opacity:1}
+  92%{opacity:.7}
+  100%{transform:translateY(-110vh) rotate(calc(var(--rot) + var(--rotEnd)));opacity:0}
+}
 
-        /* ── STYLE DE LA NAV BAR (Commun à toutes les pages) ── */
-        #smeh-nav { 
-            position:fixed; bottom:0; left:0; right:0; height:60px;
-            background:rgba(10,10,10,.95); backdrop-filter:blur(12px);
-            border-top:0.5px solid rgba(255,255,255,.07);
-            display:flex; align-items:center; justify-content:space-around; z-index:1000; 
-        }
-        .snav-item { 
-            flex:1; display:flex; flex-direction:column; align-items:center;
-            gap:3px; text-decoration:none; color:#555; transition:color .2s; padding:8px 0; 
-        }
-        .snav-item.active { color:#f0ede8; }
-        .snav-item i { font-size:22px; }
-        .snav-item span { font-size:10px; letter-spacing:.3px; font-family: sans-serif; }
+/* Desktop : tailles plus grandes */
+@media(min-width:768px){
+  .floater{ font-size:var(--size-desktop); }
+}
+/* Mobile : tailles plus petites */
+@media(max-width:767px){
+  .floater{ font-size:var(--size-mobile); }
+}
 
-        .container {
-            display: flex;
-            max-width: 1000px;
-            margin: 4rem auto;
-            gap: 2.5rem;
-            padding: 0 1.5rem;
-        }
+main{
+  position:relative;z-index:2;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px 60px;gap:0;
+}
 
-        /* Formulaire principal */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
+header{text-align:center;margin-bottom:36px}
+.eyebrow{font-family:-apple-system,sans-serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+h1{font-size:clamp(28px,6vw,54px);font-weight:400;letter-spacing:-.5px;line-height:1.15;color:var(--text);margin-bottom:6px}
+h1 em{font-style:italic;color:var(--accent)}
+.dedic{
+  font-family:-apple-system,sans-serif;font-size:18px;
+  letter-spacing:.5px;margin-top:14px;
+  color:rgba(240,237,232,.5);
+}
+.dedic span{
+  font-style:italic;font-weight:700;
+  background:linear-gradient(90deg,#c9a96e,#fff8e7,#e8c97a,#c9a96e);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shine 2.5s linear infinite;
+}
+@keyframes shine{to{background-position:200% center}}
 
-        .feedback-card {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
+.sep{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--border),transparent);margin:0 auto 36px}
 
-        .feedback-card h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+/* DOG SECTION WRAP — contient frame + couronne + nom */
+.dog-section{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:48px;gap:14px;
+}
 
-        .text-primary { color: var(--primary); }
+.dog-section-wrap{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  /* espace en haut pour la couronne */
+  padding-top:36px;
+}
 
-        .feedback-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
+.dog-crown{
+  position:absolute;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  font-size:36px;
+  z-index:10;
+  animation:bob 2s ease-in-out infinite;
+  line-height:1;
+}
+@keyframes bob{
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(-6px)}
+}
 
-        textarea {
-            width: 100%;
-            min-height: 150px;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: #f1f5f9;
-            font-family: inherit;
-            font-size: 1rem;
-            resize: vertical;
-            outline: none;
-            transition: all 0.2s ease;
-        }
+.dog-frame{
+  width:200px;height:200px;border-radius:50%;
+  border:1px solid rgba(201,169,110,.3);padding:4px;
+  position:relative;cursor:pointer;
+  transition:border-color .3s,transform .3s;
+  /* overflow:hidden retiré pour ne pas couper les halos */
+}
+.dog-frame:hover{border-color:rgba(201,169,110,.8);transform:scale(1.04)}
+.dog-frame:active{transform:scale(.97)}
 
-        textarea:focus {
-            border-color: var(--primary);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
+/* Le clip rond est appliqué uniquement à l'image */
+.dog-frame img{
+  width:100%;height:100%;
+  border-radius:50%;
+  object-fit:cover;display:block;
+  filter:sepia(.1) brightness(.95);
+  position:relative;z-index:2;
+}
 
-        .char-count {
-            text-align: right;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-        }
+.dog-halo{
+  position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+             linear-gradient(135deg,rgba(201,169,110,.6),transparent 50%,rgba(201,169,110,.4)) border-box;
+  animation:spin 6s linear infinite;
+  z-index:1;
+}
+.dog-halo2{
+  position:absolute;inset:-16px;border-radius:50%;
+  border:1px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+             linear-gradient(225deg,rgba(201,169,110,.3),transparent 50%,rgba(201,169,110,.15)) border-box;
+  animation:spin 10s linear infinite reverse;
+  z-index:1;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        .send-btn {
-            margin-top: 1rem;
-            width: 100%;
-            padding: 0.8rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: background 0.2s;
-        }
+.dog-name{
+  font-family:-apple-system,sans-serif;font-size:11px;
+  letter-spacing:4px;text-transform:uppercase;color:var(--muted);
+  text-align:center;
+  margin-top:10px;
+}
 
-        .send-btn:hover { background: var(--primary-hover); }
-        .send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+/* BARK BURST */
+.bark{
+  position:fixed;font-family:-apple-system,sans-serif;font-size:13px;font-weight:800;
+  color:var(--accent);pointer-events:none;z-index:999;white-space:nowrap;
+  letter-spacing:.5px;
+}
 
-        /* Sidebar - Liste des idées */
-        .sidebar {
-            width: 340px;
-            flex-shrink: 0;
-        }
+/* CARDS GRID */
+.cards{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;width:100%;max-width:500px;
+}
+.card{
+  position:relative;border-radius:20px;text-decoration:none;color:var(--text);
+  border:1px solid var(--border);overflow:hidden;
+  padding:28px 20px 22px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:160px;
+  transition:transform .25s,box-shadow .25s;
+  background:rgba(255,255,255,.02);
+}
+.card-bg{
+  position:absolute;inset:0;opacity:.12;transition:opacity .3s;
+  background:var(--grad);
+}
+.card:hover .card-bg{opacity:.22}
+.card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 60%);
+}
+.card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.card-icon{
+  position:absolute;top:18px;right:18px;font-size:30px;z-index:2;
+  transition:transform .3s;
+}
+.card:hover .card-icon{transform:scale(1.15) rotate(-5deg)}
+.card-content{position:relative;z-index:2}
+.card-title{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.card-sub{font-size:11px;color:rgba(255,255,255,.5);font-family:-apple-system,sans-serif;line-height:1.4}
 
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
+/* DISABLED */
+.card.disabled{opacity:.35;pointer-events:none;cursor:default}
 
-        .sidebar-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-        }
+.soon{
+  display:inline-block;
+  font-family:-apple-system,sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  background:rgba(201,169,110,.12);color:var(--accent);
+  border:1px solid rgba(201,169,110,.2);border-radius:6px;
+  padding:2px 7px;margin-top:6px;
+}
 
-        .idea-count {
-            background: var(--primary);
-            color: white;
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 20px;
-        }
+footer{
+  margin-top:56px;text-align:center;
+  font-family:-apple-system,sans-serif;font-size:11px;
+  color:rgba(255,255,255,.12);letter-spacing:3px;text-transform:uppercase;
+}
 
-        .idea-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
-        }
-
-        .idea-item {
-            background: var(--bg-card);
-            padding: 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            animation: slideIn 0.3s ease-out;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .idea-text {
-            font-size: 0.95rem;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-        }
-
-        .idea-meta {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .empty-hint {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 2rem;
-            font-style: italic;
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 5rem; /* Un peu plus haut pour ne pas gêner la nav */
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #1e293b;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .toast.show { transform: translateX(-50%) translateY(0); }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container { flex-direction: column; margin: 1rem auto; }
-            .sidebar { width: 100%; }
-        }
-    </style>
+/* Responsive mobile */
+@media(max-width:480px){
+  .cards{max-width:100%}
+  .dog-frame{width:170px;height:170px}
+  .dog-crown{font-size:30px}
+  header{margin-bottom:28px}
+  .sep{height:28px;margin-bottom:28px}
+  .dog-section{margin-bottom:36px}
+}
+</style>
 </head>
 <body>
 
-<nav id="smeh-nav">
-    <a class="snav-item" href="index.html"><i class="ti ti-home"></i><span>Accueil</span></a>
-    <a class="snav-item" href="scroll.html"><i class="ti ti-photo"></i><span>Tikigram</span></a>
-    <a class="snav-item" href="musique.html"><i class="ti ti-music"></i><span>Musique</span></a>
-    <a class="snav-item" href="video.html"><i class="ti ti-video"></i><span>Vidéos</span></a>
-    <a class="snav-item" href="geo.html"><i class="ti ti-world"></i><span>Géo Jeu</span></a>
-    <a class="snav-item active" href="feedback_page.html"><i class="ti ti-bulb"></i><span>Idées</span></a>
-</nav>
+<div class="stars" id="stars"></div>
+<div class="horizon"></div>
+<div class="floaters" id="floaters"></div>
 
-<div class="container">
-    <main class="main-content">
-        <div class="feedback-card">
-            <h2><i class="ti ti-bulb text-primary"></i> Proposer une idée</h2>
-            <p>Comment pouvons-nous améliorer votre expérience ?</p>
-            
-            <textarea id="ideaInput" placeholder="Ex: Ajouter un mode sombre pour la lecture de nuit..." maxlength="500"></textarea>
-            
-            <div class="char-count" id="charCount">0 / 500</div>
-            
-            <button class="send-btn" id="sendBtn" onclick="submitIdea()">
-                <i class="ti ti-send"></i> Envoyer la suggestion
-            </button>
-        </div>
-    </main>
+<main>
+  <header>
+    <h1>Smeh <em>Ibiza</em><br>2026</h1>
+    <p class="dedic">dédicace à <span>Boulèche</span> 🐾</p>
+  </header>
 
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h3 class="sidebar-title">Suggestions reçues</h3>
-            <span class="idea-count" id="ideaCount">0</span>
-        </div>
-        
-        <div id="ideaList" class="idea-list">
-            <p class="empty-hint">Aucune idée pour le moment.<br>Soyez le premier à contribuer !</p>
-        </div>
-    </aside>
-</div>
+  <div class="sep"></div>
 
-<div class="toast" id="toast">
-    <i class="ti ti-circle-check" style="color: #4ade80"></i> Suggestion envoyée avec succès !
-</div>
+  <div class="dog-section">
+    <div class="dog-section-wrap">
+      <!-- Couronne EN DEHORS du dog-frame → pas coupée par overflow:hidden -->
+      <div class="dog-crown">👑</div>
+      <div class="dog-frame" id="dogBtn">
+        <div class="dog-halo2"></div>
+        <div class="dog-halo"></div>
+        <img src="bouleche.jpg" alt="Boulèche">
+      </div>
+      <span class="dog-name">Boulèche</span>
+    </div>
+  </div>
+
+  <nav class="cards">
+    <a href="scroll.html" class="card" style="--grad:linear-gradient(135deg,#ff2d78,#9b2dff)">
+      <div class="card-bg"></div>
+      <span class="card-icon">📸</span>
+      <div class="card-content">
+        <div class="card-title">Tikigram</div>
+        <div class="card-sub">Les refs à avoir absolument en 2026</div>
+      </div>
+    </a>
+    <a href="musique.html" class="card" style="--grad:linear-gradient(135deg,#00ff88,#00c8ff)">
+      <div class="card-bg"></div>
+      <span class="card-icon">🎵</span>
+      <div class="card-content">
+        <div class="card-title">Musique</div>
+        <div class="card-sub">La playlist du voyage</div>
+      </div>
+    </a>
+    <a href="video.html" class="card" style="--grad:linear-gradient(135deg,#ff6b00,#ffe600)">
+      <div class="card-bg"></div>
+      <span class="card-icon">🎬</span>
+      <div class="card-content">
+        <div class="card-title">Vidéos</div>
+        <div class="card-sub">Tous les clips du trip</div>
+      </div>
+    </a>
+    <a href="feedback_page.html" class="card" style="--grad:linear-gradient(135deg,#8E44AD,#FF007F)">
+      <div class="card-bg"></div>
+      <span class="card-icon">📝​</span>
+      <div class="card-content">
+        <div class="card-title">Améliorations</div>
+        <div class="card-sub">Donnez votre avis</div>
+      </div>
+    </a>
+    <a href="geo.html" class="card" style="--grad:linear-gradient(135deg,CadetBlue,DeepSkyBlue)">
+      <div class="card-bg"></div>
+      <span class="card-icon">🌍​</span>
+      <div class="card-content">
+        <div class="card-title">Geo jeu</div>
+        <div class="card-sub">brainrot drapeaux</div>
+      </div>
+    </a>
+  </nav>
+
+  <footer>smeh · ibiza · mmxxvi</footer>
+</main>
 
 <script>
-const ideas = [];
-const input = document.getElementById('ideaInput');
-const list = document.getElementById('ideaList');
-const count = document.getElementById('ideaCount');
-const toast = document.getElementById('toast');
-const btn = document.getElementById('sendBtn');
-const charCount = document.getElementById('charCount');
+// STARS
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 90; i++) {
+  const el = document.createElement('div');
+  el.className = 'star';
+  const sz = Math.random() * 1.8 + .4;
+  el.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+  starsEl.appendChild(el);
+}
 
-// Mise à jour du compteur de caractères
-input.addEventListener('input', () => {
-    charCount.textContent = input.value.length + ' / 500';
+// FLOATING PHRASES
+const phrases = [
+  "F(x) = Yasmina Khan.",
+  "C'est Jésus",
+  "La main dans le paquet, c'est la meilleure chose au monde",
+  "Gabi bouge tes Locks",
+  "Léo enLéLé",
+  "Le son il tue",
+  "Brocoli Beatz",
+  "Tiki Tiki",
+  "Gnaegnagny",
+  "Guillaume",
+  "Jenny le pompe grondeur",
+  "Le chat de la maison",
+  "DONNE TA PUFF",
+  "Fuck les riches",
+  "BBL comme Jamais",
+  "Carbo à 5h du mat'",
+  "Louis qui se fait niquer à minuit",
+  "La June",
+  "Arrosage de jardin avec sa pisse",
+];
+
+const floatersEl = document.getElementById('floaters');
+const fonts = [
+  'Georgia,serif',
+  '-apple-system,sans-serif',
+  "'Courier New',monospace",
+  'Impact,sans-serif',
+  'Palatino,serif',
+];
+const colors = [
+  'rgba(201,169,110,.8)',
+  'rgba(255,255,255,.7)',
+  'rgba(180,100,255,.8)',
+  'rgba(255,80,120,.8)',
+  'rgba(0,220,200,.75)',
+  'rgba(255,200,60,.85)',
+  'rgba(100,200,255,.8)',
+];
+
+// Détecte mobile ou desktop
+const isMobile = window.innerWidth < 768;
+
+phrases.forEach((txt) => {
+  [0, 1].forEach(() => {
+    const f = document.createElement('div');
+    f.className = 'floater';
+    f.textContent = txt;
+
+    const rot = (Math.random() * 40 - 20).toFixed(1);
+    const rotEnd = (Math.random() * 30 - 15).toFixed(1);
+    const dur = (Math.random() * 14 + 12).toFixed(1);
+    const delay = `-${(Math.random() * 20).toFixed(1)}s`;
+    const x = `${(Math.random() * 85).toFixed(1)}%`;
+
+    // Tailles plus variées : mobile 9–22px, desktop 14–38px
+    const sizeDesktop = (Math.random() * 24 + 14).toFixed(1) + 'px'; // 14–38px
+    const sizeMobile  = (Math.random() * 13 + 9).toFixed(1) + 'px';  // 9–22px
+
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const font  = fonts[Math.floor(Math.random() * fonts.length)];
+
+    f.style.cssText = `
+      --x:${x};
+      --dur:${dur}s;
+      --delay:${delay};
+      --rot:${rot}deg;
+      --rotEnd:${rotEnd}deg;
+      --size-desktop:${sizeDesktop};
+      --size-mobile:${sizeMobile};
+      color:${color};
+      font-family:${font};
+    `;
+
+    floatersEl.appendChild(f);
+  });
 });
 
-// Envoi de l'idée
-function submitIdea() {
-    const text = input.value.trim();
-    if (!text) return;
-
-    btn.disabled = true;
-    
-    // Simulation d'un petit délai
+// DOG CLICK — burst quotes
+const barks = ["OUAF","OUAF OUAF","🐾","👑","WOOF","Boulèche !!","Le roi 🐶"];
+document.getElementById('dogBtn').addEventListener('click', () => {
+  for (let i = 0; i < 10; i++) {
+    const el = document.createElement('div');
+    el.className = 'bark';
+    el.textContent = barks[Math.floor(Math.random() * barks.length)];
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2 - 60;
+    el.style.cssText = `left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);opacity:1;transition:all .9s ease`;
+    document.body.appendChild(el);
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 80 + Math.random() * 140;
     setTimeout(() => {
-        const now = new Date();
-        const meta = now.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit'}) + ' à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-        
-        ideas.unshift({text, meta});
-        renderList();
-        
-        // Reset
-        input.value = '';
-        charCount.textContent = '0 / 500';
-        
-        // Notification
-        toast.classList.add('show');
-        setTimeout(() => { 
-            toast.classList.remove('show'); 
-            btn.disabled = false; 
-        }, 3000);
-    }, 400);
-}
-
-// Raccourci Ctrl + Enter
-input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) submitIdea();
+      el.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px),calc(-50% + ${Math.sin(angle)*dist}px)) rotate(${(Math.random()*40-20).toFixed(0)}deg)`;
+      el.style.opacity = '0';
+    }, 20);
+    setTimeout(() => el.remove(), 1000);
+  }
 });
-
-// Rendu de la liste
-function renderList() {
-    count.textContent = ideas.length;
-    
-    if (ideas.length === 0) {
-        list.innerHTML = '<p class="empty-hint">Aucune idée pour le moment.<br>Soyez le premier !</p>';
-        return;
-    }
-
-    list.innerHTML = ideas.map((idea, i) => `
-        <div class="idea-item">
-            <div class="idea-text">${escHtml(idea.text)}</div>
-            <div class="idea-meta">
-                <i class="ti ti-calendar-event"></i> ${idea.meta} 
-                <span style="color:var(--border)">|</span> 
-                <span>#${ideas.length - i}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Sécurité : éviter les injections XSS
-function escHtml(s) {
-    const div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
-}
 </script>
-
 </body>
 </html>
